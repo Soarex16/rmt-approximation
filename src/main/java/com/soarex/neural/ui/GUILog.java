@@ -11,11 +11,11 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintStream;
 
-public class GUILog2 extends JFrame {
+public class GUILog extends JFrame {
     private JPanel contentPane;
     private JTextArea textArea;
 
-    public GUILog2() {
+    public GUILog() {
         try {
             UIManager.setLookAndFeel(new DarculaLaf());
         } catch (UnsupportedLookAndFeelException e) {

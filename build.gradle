@@ -1,5 +1,9 @@
 group 'com.soarex'
-version 'rmt-gui-rv.1.2.5'
+version 'v1.2.5'
+/*
+    Don't forget this!!!
+    http://semver.org/
+ */
 
 apply plugin: 'java'
 apply plugin: 'application'
