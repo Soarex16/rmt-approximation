@@ -1,0 +1,409 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<form xmlns="http://www.intellij.com/uidesigner/form/" version="1" bind-to-class="com.soarex.neural.ui.GUIRmt">
+  <grid id="cbd77" binding="contentPane" layout-manager="GridLayoutManager" row-count="4" column-count="2" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+    <margin top="10" left="10" bottom="10" right="10"/>
+    <constraints>
+      <xy x="48" y="54" width="1316" height="508"/>
+    </constraints>
+    <properties>
+      <foreground color="-14606047"/>
+      <toolTipText value=""/>
+    </properties>
+    <border type="none"/>
+    <children>
+      <grid id="e3588" binding="chartContainer" layout-manager="GridLayoutManager" row-count="1" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+        <margin top="0" left="0" bottom="0" right="0"/>
+        <constraints>
+          <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <foreground color="-4473925"/>
+        </properties>
+        <border type="none"/>
+        <children>
+          <grid id="2745" binding="chartJPanel" custom-create="true" layout-manager="GridLayoutManager" row-count="1" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+            <margin top="0" left="0" bottom="0" right="0"/>
+            <constraints>
+              <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+            </constraints>
+            <properties/>
+            <border type="none"/>
+            <children/>
+          </grid>
+        </children>
+      </grid>
+      <grid id="982d" layout-manager="GridLayoutManager" row-count="2" column-count="8" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+        <margin top="0" left="0" bottom="0" right="0"/>
+        <constraints>
+          <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties/>
+        <border type="none"/>
+        <children>
+          <component id="d4f1d" class="javax.swing.JProgressBar" binding="progressBar">
+            <constraints>
+              <grid row="0" column="0" row-span="1" col-span="7" vsize-policy="0" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+            </constraints>
+            <properties/>
+          </component>
+          <component id="a8934" class="javax.swing.JLabel">
+            <constraints>
+              <grid row="1" column="0" row-span="1" col-span="2" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+            </constraints>
+            <properties>
+              <text value="Data points"/>
+            </properties>
+          </component>
+          <component id="1dfd0" class="javax.swing.JLabel">
+            <constraints>
+              <grid row="1" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+            </constraints>
+            <properties>
+              <text value="Min"/>
+            </properties>
+          </component>
+          <component id="d91e2" class="javax.swing.JLabel">
+            <constraints>
+              <grid row="1" column="5" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+            </constraints>
+            <properties>
+              <text value="Max"/>
+            </properties>
+          </component>
+          <component id="a2bc" class="javax.swing.JTextField" binding="fnDataPoints">
+            <constraints>
+              <grid row="1" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
+                <preferred-size width="150" height="-1"/>
+              </grid>
+            </constraints>
+            <properties>
+              <text value=""/>
+              <toolTipText value="Number of data points"/>
+              <visible value="true"/>
+            </properties>
+          </component>
+          <component id="d1ee8" class="javax.swing.JTextField" binding="fxMin">
+            <constraints>
+              <grid row="1" column="4" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
+                <preferred-size width="150" height="-1"/>
+              </grid>
+            </constraints>
+            <properties>
+              <text value=""/>
+            </properties>
+          </component>
+          <component id="21ea8" class="javax.swing.JTextField" binding="fxMax">
+            <constraints>
+              <grid row="1" column="6" row-span="1" col-span="2" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
+                <preferred-size width="150" height="-1"/>
+              </grid>
+            </constraints>
+            <properties>
+              <text value=""/>
+            </properties>
+          </component>
+          <component id="5d53" class="javax.swing.JLabel" binding="iterCL">
+            <constraints>
+              <grid row="0" column="7" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+            </constraints>
+            <properties>
+              <horizontalAlignment value="10"/>
+              <text value="0/0"/>
+            </properties>
+          </component>
+        </children>
+      </grid>
+      <grid id="94766" layout-manager="GridLayoutManager" row-count="1" column-count="3" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+        <margin top="0" left="0" bottom="0" right="0"/>
+        <constraints>
+          <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="1" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <foreground color="-2039584"/>
+        </properties>
+        <border type="none"/>
+        <children>
+          <grid id="9538f" layout-manager="GridLayoutManager" row-count="1" column-count="2" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+            <margin top="0" left="0" bottom="0" right="0"/>
+            <constraints>
+              <grid row="0" column="2" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+            </constraints>
+            <properties>
+              <foreground color="-2039584"/>
+            </properties>
+            <border type="none"/>
+            <children>
+              <component id="e7465" class="javax.swing.JButton" binding="buttonOK">
+                <constraints>
+                  <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                </constraints>
+                <properties>
+                  <text value="OK"/>
+                </properties>
+              </component>
+              <component id="cff5e" class="javax.swing.JButton" binding="buttonLearningGraph">
+                <constraints>
+                  <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                </constraints>
+                <properties>
+                  <text value="Learning"/>
+                  <toolTipText value="Shows a graph of the learning process"/>
+                </properties>
+              </component>
+            </children>
+          </grid>
+          <component id="c55db" class="javax.swing.JTextField" binding="funcT">
+            <constraints>
+              <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
+                <preferred-size width="150" height="-1"/>
+              </grid>
+            </constraints>
+            <properties>
+              <text value=""/>
+              <toolTipText value="&lt;html&gt;&#10;&lt;b&gt;Predefined available functions:&lt;/b&gt;&#10;&lt;br&gt;abs: absolute value&#10;&lt;br&gt;acos: arc cosine&#10;&lt;br&gt;asin: arc sine&#10;&lt;br&gt;atan: arc tangent&#10;&lt;br&gt;cbrt: cubic root&#10;&lt;br&gt;ceil: nearest upper integer&#10;&lt;br&gt;cos: cosine&#10;&lt;br&gt;cosh: hyperbolic cosine&#10;&lt;br&gt;exp: euler's number raised to the power (e^x)&#10;&lt;br&gt;floor: nearest lower integer&#10;&lt;br&gt;log: logarithmus naturalis (base e)&#10;&lt;br&gt;log10: logarithm (base 10)&#10;&lt;br&gt;log2: logarithm (base 2)&#10;&lt;br&gt;sin: sine&#10;&lt;br&gt;sinh: hyperbolic sine&#10;&lt;br&gt;sqrt: square root&#10;&lt;br&gt;tan: tangent&#10;&lt;br&gt;tanh: hyperbolic tangent&#10;&lt;br&gt;signum: signum function&#10;&lt;/html&gt;"/>
+            </properties>
+          </component>
+          <component id="5e6ee" class="javax.swing.JLabel">
+            <constraints>
+              <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+            </constraints>
+            <properties>
+              <text value="f(x) ="/>
+              <toolTipText value="Function to be approximated"/>
+            </properties>
+          </component>
+        </children>
+      </grid>
+      <grid id="41f00" layout-manager="GridLayoutManager" row-count="2" column-count="5" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+        <margin top="0" left="0" bottom="0" right="0"/>
+        <constraints>
+          <grid row="3" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <visible value="true"/>
+        </properties>
+        <border type="none"/>
+        <children>
+          <grid id="18766" binding="optionsMore" layout-manager="GridLayoutManager" row-count="7" column-count="7" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+            <margin top="0" left="0" bottom="0" right="0"/>
+            <constraints>
+              <grid row="1" column="0" row-span="1" col-span="5" vsize-policy="3" hsize-policy="2" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+            </constraints>
+            <properties>
+              <visible value="false"/>
+            </properties>
+            <border type="none"/>
+            <children>
+              <component id="cc563" class="javax.swing.JTextField" binding="layersCfg">
+                <constraints>
+                  <grid row="0" column="1" row-span="1" col-span="6" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false"/>
+                </constraints>
+                <properties>
+                  <text value="50, 50, 50, 50, 50, 50, 50, 50"/>
+                  <toolTipText value="The number of neurons in the hidden layers (separated by commas)."/>
+                  <visible value="true"/>
+                </properties>
+              </component>
+              <component id="7dacb" class="javax.swing.JLabel">
+                <constraints>
+                  <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                </constraints>
+                <properties>
+                  <text value="Network configuration"/>
+                </properties>
+              </component>
+              <component id="8b2a9" class="javax.swing.JTextField" binding="learningRateValue">
+                <constraints>
+                  <grid row="1" column="1" row-span="1" col-span="6" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false"/>
+                </constraints>
+                <properties>
+                  <text value="0.01"/>
+                  <toolTipText value="Network learning rate"/>
+                </properties>
+              </component>
+              <component id="1c0bb" class="javax.swing.JLabel">
+                <constraints>
+                  <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                </constraints>
+                <properties>
+                  <text value="Learning rate"/>
+                </properties>
+              </component>
+              <component id="9c21f" class="javax.swing.JTextField" binding="epochsValue">
+                <constraints>
+                  <grid row="2" column="1" row-span="1" col-span="6" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false"/>
+                </constraints>
+                <properties>
+                  <text value="2000"/>
+                  <toolTipText value="Number of epochs (full passes of the data)"/>
+                </properties>
+              </component>
+              <component id="f89d7" class="javax.swing.JTextField" binding="numOutFunc">
+                <constraints>
+                  <grid row="3" column="1" row-span="1" col-span="6" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false"/>
+                </constraints>
+                <properties>
+                  <text value="4"/>
+                  <toolTipText value="Number of output approximating functions"/>
+                </properties>
+              </component>
+              <component id="17a2e" class="javax.swing.JLabel">
+                <constraints>
+                  <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                </constraints>
+                <properties>
+                  <text value="Epochs"/>
+                </properties>
+              </component>
+              <component id="c0970" class="javax.swing.JLabel">
+                <constraints>
+                  <grid row="3" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                </constraints>
+                <properties>
+                  <text value="Number of output functions"/>
+                  <visible value="true"/>
+                </properties>
+              </component>
+              <component id="56073" class="javax.swing.JLabel">
+                <constraints>
+                  <grid row="4" column="4" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                </constraints>
+                <properties>
+                  <text value="Seed"/>
+                </properties>
+              </component>
+              <component id="32676" class="javax.swing.JCheckBox" binding="randomSeedCheckBox" default-binding="true">
+                <constraints>
+                  <grid row="4" column="6" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                </constraints>
+                <properties>
+                  <hideActionText value="false"/>
+                  <selected value="true"/>
+                  <text value="random seed"/>
+                </properties>
+              </component>
+              <component id="d2991" class="javax.swing.JLabel">
+                <constraints>
+                  <grid row="4" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                </constraints>
+                <properties>
+                  <text value="Batch size"/>
+                </properties>
+              </component>
+              <component id="d9c10" class="javax.swing.JTextField" binding="batchSizeValue">
+                <constraints>
+                  <grid row="4" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false"/>
+                </constraints>
+                <properties>
+                  <text value="100"/>
+                  <toolTipText value="Batch size: i.e., each epoch has nDataPoints/batchSize parameter updates"/>
+                </properties>
+              </component>
+              <component id="6249e" class="javax.swing.JLabel">
+                <constraints>
+                  <grid row="4" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                </constraints>
+                <properties>
+                  <text value="Iterations"/>
+                </properties>
+              </component>
+              <component id="c931a" class="javax.swing.JSpinner" binding="iterationsValue">
+                <constraints>
+                  <grid row="4" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false"/>
+                </constraints>
+                <properties>
+                  <toolTipText value="Number of iterations per minibatch"/>
+                </properties>
+              </component>
+              <component id="4f557" class="javax.swing.JLabel">
+                <constraints>
+                  <grid row="5" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                </constraints>
+                <properties>
+                  <text value="Optimisation algorithm"/>
+                </properties>
+              </component>
+              <component id="b906" class="javax.swing.JComboBox" binding="optimisationAlgo" custom-create="true">
+                <constraints>
+                  <grid row="5" column="1" row-span="1" col-span="6" vsize-policy="0" hsize-policy="0" anchor="8" fill="1" indent="0" use-parent-layout="false"/>
+                </constraints>
+                <properties>
+                  <toolTipText value="Optimization algorithm to use"/>
+                </properties>
+              </component>
+              <component id="b0d28" class="javax.swing.JLabel">
+                <constraints>
+                  <grid row="6" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                </constraints>
+                <properties>
+                  <text value="Loss function"/>
+                </properties>
+              </component>
+              <component id="7d48f" class="javax.swing.JComboBox" binding="lossFunc" custom-create="true">
+                <constraints>
+                  <grid row="6" column="1" row-span="1" col-span="6" vsize-policy="0" hsize-policy="2" anchor="8" fill="1" indent="0" use-parent-layout="false"/>
+                </constraints>
+                <properties>
+                  <toolTipText value="&lt;html&gt;&lt;b&gt;Loss functions representing the price paid for inaccuracy of predictions&lt;/b&gt;&lt;br&gt;&#10;&lt;b&gt;MSE:&lt;/b&gt; Mean Squared Error: Linear Regression&lt;br&gt;&#10;&lt;b&gt;EXPLL:&lt;/b&gt; Exponential log likelihood: Poisson Regression&lt;br&gt;&#10;&lt;b&gt;XENT:&lt;/b&gt; Cross Entropy: Binary Classification&lt;br&gt;&#10;&lt;b&gt;MCXENT:&lt;/b&gt; Multiclass Cross Entropy&lt;br&gt;&#10;&lt;b&gt;RMSE_XENT:&lt;/b&gt; RMSE Cross Entropy&lt;br&gt;&#10;&lt;b&gt;SQUARED_LOSS:&lt;/b&gt; Squared Loss&lt;br&gt;&#10;&lt;b&gt;NEGATIVELOGLIKELIHOOD:&lt;/b&gt; Negative Log Likelihood&lt;br&gt;&#10;&lt;/html&gt;"/>
+                </properties>
+              </component>
+              <component id="7a216" class="javax.swing.JTextField" binding="seedValue">
+                <constraints>
+                  <grid row="4" column="5" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false"/>
+                </constraints>
+                <properties>
+                  <enabled value="false"/>
+                  <toolTipText value="Random number generator seed, need for reproducibility"/>
+                </properties>
+              </component>
+            </children>
+          </grid>
+          <hspacer id="2f">
+            <constraints>
+              <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+            </constraints>
+          </hspacer>
+          <component id="86d2e" class="javax.swing.JButton" binding="buttonMoreLess">
+            <constraints>
+              <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+            </constraints>
+            <properties>
+              <text value="More..."/>
+            </properties>
+          </component>
+          <component id="435d" class="javax.swing.JButton" binding="saveButton" default-binding="true">
+            <constraints>
+              <grid row="0" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="2" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+            </constraints>
+            <properties>
+              <text value="Save"/>
+              <toolTipText value="Save training graphs and approximation and the parameters of the neural network"/>
+            </properties>
+          </component>
+          <component id="776f8" class="javax.swing.JButton" binding="buttonAbout">
+            <constraints>
+              <grid row="0" column="4" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+            </constraints>
+            <properties>
+              <text value="About"/>
+            </properties>
+          </component>
+          <component id="e45bb" class="javax.swing.JButton" binding="loadButton" default-binding="true">
+            <constraints>
+              <grid row="0" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+            </constraints>
+            <properties>
+              <text value="Load"/>
+              <toolTipText value="Load the configuration of the neural network from file"/>
+            </properties>
+          </component>
+        </children>
+      </grid>
+      <vspacer id="5f5">
+        <constraints>
+          <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="6" hsize-policy="1" anchor="0" fill="2" indent="0" use-parent-layout="false"/>
+        </constraints>
+      </vspacer>
+    </children>
+  </grid>
+</form>
