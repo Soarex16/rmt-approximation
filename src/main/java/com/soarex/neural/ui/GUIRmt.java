@@ -41,7 +41,7 @@ import static com.soarex.neural.RegressionMathFuncApproximation.*;
 
 public class GUIRmt extends JFrame {
     private JPanel contentPane;
-    private JButton buttonOK;
+    private JButton buttonStart;
     private JTextField funcT;
     private JPanel chartJPanel;
     private JTextField fxMin;
@@ -66,6 +66,7 @@ public class GUIRmt extends JFrame {
     private JButton buttonAbout;
     private JButton saveButton;
     private JButton loadButton;
+    private JButton buttonStop;
 
     private OptimizationAlgorithm optAlg = OptimizationAlgorithm.STOCHASTIC_GRADIENT_DESCENT;
     private LossFunctions.LossFunction lossFn = LossFunctions.LossFunction.MSE;
@@ -78,7 +79,7 @@ public class GUIRmt extends JFrame {
 
     private int totalEpochs = 0;
 
-    public GUIRmt() {
+    private GUIRmt() {
         try {
             UIManager.setLookAndFeel(new DarculaLaf());
         } catch (UnsupportedLookAndFeelException e) {
@@ -86,20 +87,21 @@ public class GUIRmt extends JFrame {
         }
         $$$setupUI$$$();
         setContentPane(contentPane);
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        getRootPane().setDefaultButton(buttonOK);
+        setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+        getRootPane().setDefaultButton(buttonStart);
         try {
             setIconImage(ImageIO.read(getClass().getResourceAsStream("/64.png")));
         } catch (IOException e) {
             e.printStackTrace();
         }
 
-        iterationsValue.setValue(Integer.valueOf(1));
+        iterationsValue.setValue(1);
         optimisationAlgo.setSelectedIndex(4);
         lossFunc.setSelectedIndex(0);
 
         randomSeedCheckBox.addActionListener(e -> rngOff());
-        buttonOK.addActionListener(e -> onOK());
+        buttonStart.addActionListener(e -> onStart());
+        buttonStop.addActionListener(e -> onStop());
         buttonMoreLess.addActionListener(e -> moreLess());
         buttonAbout.addActionListener(e -> credits());
         buttonLearningGraph.addActionListener(e -> learningGraph());
@@ -107,13 +109,26 @@ public class GUIRmt extends JFrame {
         loadButton.addActionListener(e -> saveLoadCfg(false));
     }
 
+    public static void main(String[] args) {
+        GUIRmt form = new GUIRmt();
+        form.setTitle("Math function approximation demo");
+        form.pack();
+        form.setVisible(true);
+    }
+
+    private void onStop() {
+        Thread nn = getThreadByName("soarex-neuro");
+        if (nn != null) nn.stop();
+    }
+
     private void saveLoadCfg(boolean save) {
         JFileChooser chooser = new JFileChooser();
         chooser.setDialogTitle("Select JSON configuration file");
-        chooser.showSaveDialog(this);
-        String cfgFile = chooser.getSelectedFile().getAbsolutePath();
+        String cfgFile = null;
 
         if (save) {
+            int choice = chooser.showSaveDialog(this);
+            if (choice != JFileChooser.APPROVE_OPTION) return;
             JSONObject obj = new JSONObject();
             obj.put("func", func);
             obj.put("xmin", xmin);
@@ -155,6 +170,9 @@ public class GUIRmt extends JFrame {
                 e.printStackTrace();
             }
         } else {
+            int choise = chooser.showOpenDialog(this);
+            if (choise != JFileChooser.APPROVE_OPTION) return;
+            cfgFile = chooser.getSelectedFile().getAbsolutePath();
             try {
                 JSONParser parser = new JSONParser();
                 JSONObject obj = (JSONObject) parser.parse(cfgFile);
@@ -219,7 +237,7 @@ public class GUIRmt extends JFrame {
         }
     }
 
-    private void onOK() {
+    private void onStart() {
         if (getThreadByName("soarex-neuro") != null) {
             JOptionPane.showMessageDialog(null, "Another learning process is already running", "Please, wait", JOptionPane.INFORMATION_MESSAGE);
             return;
@@ -285,14 +303,14 @@ public class GUIRmt extends JFrame {
         networkThread.start();
     }
 
-    public Thread getThreadByName(String threadName) {
+    private Thread getThreadByName(String threadName) {
         for (Thread t : Thread.getAllStackTraces().keySet()) {
             if (t.getName().equals(threadName)) return t;
         }
         return null;
     }
 
-    public MultiLayerConfiguration getParametrisedDeepNetworkConfiguration() {
+    private MultiLayerConfiguration getParametrisedDeepNetworkConfiguration() {
         NeuralNetConfiguration.ListBuilder listBuilder = new NeuralNetConfiguration.Builder()
                 .seed(seed)
                 .iterations(iterations)
@@ -341,13 +359,6 @@ public class GUIRmt extends JFrame {
         chart.getXYPlot().setRangePannable(true);
         chart.getXYPlot().setDomainPannable(true);
         chartPanel.setChart(chart);
-    }
-
-    public static void main(String[] args) {
-        GUIRmt form = new GUIRmt();
-        form.setTitle("Math function approximation demo");
-        form.pack();
-        form.setVisible(true);
     }
 
     private void createUIComponents() {
@@ -426,13 +437,12 @@ public class GUIRmt extends JFrame {
         panel3.setLayout(new GridLayoutManager(1, 2, new Insets(0, 0, 0, 0), -1, -1));
         panel3.setForeground(new Color(-2039584));
         panel2.add(panel3, new GridConstraints(0, 2, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
-        buttonOK = new JButton();
-        buttonOK.setText("OK");
-        panel3.add(buttonOK, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
-        buttonLearningGraph = new JButton();
-        buttonLearningGraph.setText("Learning");
-        buttonLearningGraph.setToolTipText("Shows a graph of the learning process");
-        panel3.add(buttonLearningGraph, new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        buttonStart = new JButton();
+        buttonStart.setText("Start");
+        panel3.add(buttonStart, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        buttonStop = new JButton();
+        buttonStop.setText("Stop");
+        panel3.add(buttonStop, new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         funcT = new JTextField();
         funcT.setText("");
         funcT.setToolTipText("<html>\n<b>Predefined available functions:</b>\n<br>abs: absolute value\n<br>acos: arc cosine\n<br>asin: arc sine\n<br>atan: arc tangent\n<br>cbrt: cubic root\n<br>ceil: nearest upper integer\n<br>cos: cosine\n<br>cosh: hyperbolic cosine\n<br>exp: euler's number raised to the power (e^x)\n<br>floor: nearest lower integer\n<br>log: logarithmus naturalis (base e)\n<br>log10: logarithm (base 10)\n<br>log2: logarithm (base 2)\n<br>sin: sine\n<br>sinh: hyperbolic sine\n<br>sqrt: square root\n<br>tan: tangent\n<br>tanh: hyperbolic tangent\n<br>signum: signum function\n</html>");
@@ -447,7 +457,7 @@ public class GUIRmt extends JFrame {
         contentPane.add(panel4, new GridConstraints(3, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
         optionsMore = new JPanel();
         optionsMore.setLayout(new GridLayoutManager(7, 7, new Insets(0, 0, 0, 0), -1, -1));
-        optionsMore.setVisible(false);
+        optionsMore.setVisible(true);
         panel4.add(optionsMore, new GridConstraints(1, 0, 1, 5, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
         layersCfg = new JTextField();
         layersCfg.setText("50, 50, 50, 50, 50, 50, 50, 50");
@@ -519,17 +529,29 @@ public class GUIRmt extends JFrame {
         buttonMoreLess = new JButton();
         buttonMoreLess.setText("More...");
         panel4.add(buttonMoreLess, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
-        saveButton = new JButton();
-        saveButton.setText("Save");
-        saveButton.setToolTipText("Save training graphs and approximation and the parameters of the neural network");
-        panel4.add(saveButton, new GridConstraints(0, 3, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         buttonAbout = new JButton();
         buttonAbout.setText("About");
         panel4.add(buttonAbout, new GridConstraints(0, 4, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        buttonLearningGraph = new JButton();
+        buttonLearningGraph.setText("Learning");
+        buttonLearningGraph.setToolTipText("Shows a graph of the learning process");
+        panel4.add(buttonLearningGraph, new GridConstraints(0, 3, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        final JPanel panel5 = new JPanel();
+        panel5.setLayout(new GridLayoutManager(1, 2, new Insets(0, 0, 0, 0), -1, -1));
+        panel5.setInheritsPopupMenu(true);
+        panel5.setOpaque(true);
+        panel4.add(panel5, new GridConstraints(0, 2, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
         loadButton = new JButton();
+        loadButton.setInheritsPopupMenu(true);
+        loadButton.setMargin(new Insets(2, 4, 2, 4));
         loadButton.setText("Load");
         loadButton.setToolTipText("Load the configuration of the neural network from file");
-        panel4.add(loadButton, new GridConstraints(0, 2, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        panel5.add(loadButton, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        saveButton = new JButton();
+        saveButton.setMargin(new Insets(2, 4, 2, 4));
+        saveButton.setText("Save");
+        saveButton.setToolTipText("Save training graphs and approximation and the parameters of the neural network");
+        panel5.add(saveButton, new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         final Spacer spacer2 = new Spacer();
         contentPane.add(spacer2, new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_VERTICAL, 1, GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
     }
