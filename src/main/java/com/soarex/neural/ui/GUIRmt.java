@@ -124,22 +124,26 @@ public class GUIRmt extends JFrame {
     private void saveLoadCfg(boolean save) {
         JFileChooser chooser = new JFileChooser();
         chooser.setDialogTitle("Select JSON configuration file");
-        String cfgFile = null;
+        File cfgFile = null;
 
         if (save) {
             int choice = chooser.showSaveDialog(this);
+            cfgFile = chooser.getSelectedFile();
             if (choice != JFileChooser.APPROVE_OPTION) return;
             JSONObject obj = new JSONObject();
-            obj.put("func", func);
-            obj.put("xmin", xmin);
-            obj.put("xmax", xmax);
-            obj.put("nDataPoints", nDataPoints);
-            obj.put("plotFrequency", plotFrequency);
-            obj.put("seed", seed);
-            obj.put("iterations", iterations);
-            obj.put("nEpochs", nEpochs);
-            obj.put("batchSize", batchSize);
-            obj.put("learningRate", learningRate);
+            obj.put("func", funcT.getText().toLowerCase());
+            obj.put("xmin", Double.parseDouble(fxMin.getText()));
+            obj.put("xmax", Double.parseDouble(fxMax.getText()));
+            obj.put("nDataPoints", Integer.parseInt(fnDataPoints.getText()));
+            obj.put("nEpochs", Integer.parseInt(epochsValue.getText()));
+            obj.put("plotFrequency", Integer.parseInt(epochsValue.getText()) / Integer.parseInt(numOutFunc.getText()));
+            obj.put("seed", Integer.parseInt(seedValue.getText()));
+            obj.put("iterations", iterationsValue.getValue());
+            obj.put("batchSize", Integer.parseInt(batchSizeValue.getText()));
+            obj.put("learningRate", Double.parseDouble(learningRateValue.getText()));
+            int batches = Integer.parseInt(fnDataPoints.getText()) / Integer.parseInt(batchSizeValue.getText());
+            if (batches < 1) batches = 1;
+            totalEpochs = Integer.parseInt(epochsValue.getText()) * (Integer) iterationsValue.getValue() * batches;
             obj.put("totalEpochs", totalEpochs);
             obj.put("numOutFunc", Integer.parseInt(numOutFunc.getText()));
 
@@ -157,14 +161,12 @@ public class GUIRmt extends JFrame {
             obj.put("optAlg", optimisationAlgo.getSelectedIndex());
             obj.put("lossFn", lossFunc.getSelectedIndex());
             try (FileWriter file = new FileWriter(cfgFile)) {
-                File f = new File(cfgFile);
-
                 file.write(obj.toJSONString());
                 file.flush();
                 file.close();
 
-                ChartUtilities.saveChartAsPNG(new File(f.getAbsolutePath() + "-approximation.png"), chartPanel.getChart(), 1920, 1080);
-                ChartUtilities.saveChartAsPNG(new File(f.getAbsolutePath() + "-learning.png"), learn.chartPanel.getChart(), 1920, 1080);
+                ChartUtilities.saveChartAsPNG(new File(cfgFile.getAbsolutePath() + "-approximation.png"), chartPanel.getChart(), 1920, 1080);
+                ChartUtilities.saveChartAsPNG(new File(cfgFile.getAbsolutePath() + "-learning.png"), learn.chartPanel.getChart(), 1920, 1080);
             } catch (IOException e) {
                 JOptionPane.showMessageDialog(null, "Error while saving configuration!", "Saving error", JOptionPane.ERROR_MESSAGE);
                 e.printStackTrace();
@@ -172,10 +174,10 @@ public class GUIRmt extends JFrame {
         } else {
             int choise = chooser.showOpenDialog(this);
             if (choise != JFileChooser.APPROVE_OPTION) return;
-            cfgFile = chooser.getSelectedFile().getAbsolutePath();
+            cfgFile = chooser.getSelectedFile();
             try {
                 JSONParser parser = new JSONParser();
-                JSONObject obj = (JSONObject) parser.parse(cfgFile);
+                JSONObject obj = (JSONObject) parser.parse(cfgFile.getAbsolutePath());
                 funcT.setText((String) obj.get("func"));
                 fxMin.setText(String.valueOf((double) obj.get("xmin")));
                 fxMax.setText(String.valueOf((double) obj.get("xmax")));
@@ -421,6 +423,7 @@ public class GUIRmt extends JFrame {
         panel1.add(fnDataPoints, new GridConstraints(1, 2, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(150, -1), null, 0, false));
         fxMin = new JTextField();
         fxMin.setText("");
+        fxMin.setVisible(true);
         panel1.add(fxMin, new GridConstraints(1, 4, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(150, -1), null, 0, false));
         fxMax = new JTextField();
         fxMax.setText("");
@@ -438,9 +441,13 @@ public class GUIRmt extends JFrame {
         panel3.setForeground(new Color(-2039584));
         panel2.add(panel3, new GridConstraints(0, 2, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
         buttonStart = new JButton();
+        buttonStart.setIcon(new ImageIcon(getClass().getResource("/execute.png")));
+        buttonStart.setMargin(new Insets(2, 14, 2, 14));
         buttonStart.setText("Start");
         panel3.add(buttonStart, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         buttonStop = new JButton();
+        buttonStop.setIcon(new ImageIcon(getClass().getResource("/cancel.png")));
+        buttonStop.setMargin(new Insets(2, 14, 2, 14));
         buttonStop.setText("Stop");
         panel3.add(buttonStop, new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         funcT = new JTextField();
@@ -457,7 +464,7 @@ public class GUIRmt extends JFrame {
         contentPane.add(panel4, new GridConstraints(3, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
         optionsMore = new JPanel();
         optionsMore.setLayout(new GridLayoutManager(7, 7, new Insets(0, 0, 0, 0), -1, -1));
-        optionsMore.setVisible(true);
+        optionsMore.setVisible(false);
         panel4.add(optionsMore, new GridConstraints(1, 0, 1, 5, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
         layersCfg = new JTextField();
         layersCfg.setText("50, 50, 50, 50, 50, 50, 50, 50");
@@ -522,6 +529,7 @@ public class GUIRmt extends JFrame {
         optionsMore.add(lossFunc, new GridConstraints(6, 1, 1, 6, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         seedValue = new JTextField();
         seedValue.setEnabled(false);
+        seedValue.setText("0");
         seedValue.setToolTipText("Random number generator seed, need for reproducibility");
         optionsMore.add(seedValue, new GridConstraints(4, 5, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         final Spacer spacer1 = new Spacer();
@@ -542,12 +550,14 @@ public class GUIRmt extends JFrame {
         panel5.setOpaque(true);
         panel4.add(panel5, new GridConstraints(0, 2, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
         loadButton = new JButton();
+        loadButton.setIcon(new ImageIcon(getClass().getResource("/open.png")));
         loadButton.setInheritsPopupMenu(true);
         loadButton.setMargin(new Insets(2, 4, 2, 4));
         loadButton.setText("Load");
         loadButton.setToolTipText("Load the configuration of the neural network from file");
         panel5.add(loadButton, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         saveButton = new JButton();
+        saveButton.setIcon(new ImageIcon(getClass().getResource("/save.png")));
         saveButton.setMargin(new Insets(2, 4, 2, 4));
         saveButton.setText("Save");
         saveButton.setToolTipText("Save training graphs and approximation and the parameters of the neural network");
