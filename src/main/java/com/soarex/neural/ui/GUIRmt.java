@@ -32,9 +32,8 @@ import org.nd4j.linalg.lossfunctions.LossFunctions;
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.awt.event.KeyEvent;
+import java.io.*;
 import java.util.Random;
 
 import static com.soarex.neural.RegressionMathFuncApproximation.*;
@@ -95,6 +94,9 @@ public class GUIRmt extends JFrame {
             e.printStackTrace();
         }
 
+        loadButton.setMnemonic(KeyEvent.VK_L);
+        saveButton.setMnemonic(KeyEvent.VK_S);
+
         iterationsValue.setValue(1);
         optimisationAlgo.setSelectedIndex(4);
         lossFunc.setSelectedIndex(0);
@@ -131,19 +133,40 @@ public class GUIRmt extends JFrame {
             cfgFile = chooser.getSelectedFile();
             if (choice != JFileChooser.APPROVE_OPTION) return;
             JSONObject obj = new JSONObject();
-            obj.put("func", funcT.getText().toLowerCase());
-            obj.put("xmin", Double.parseDouble(fxMin.getText()));
-            obj.put("xmax", Double.parseDouble(fxMax.getText()));
-            obj.put("nDataPoints", Integer.parseInt(fnDataPoints.getText()));
-            obj.put("nEpochs", Integer.parseInt(epochsValue.getText()));
-            obj.put("plotFrequency", Integer.parseInt(epochsValue.getText()) / Integer.parseInt(numOutFunc.getText()));
-            obj.put("seed", Integer.parseInt(seedValue.getText()));
-            obj.put("iterations", iterationsValue.getValue());
-            obj.put("batchSize", Integer.parseInt(batchSizeValue.getText()));
-            obj.put("learningRate", Double.parseDouble(learningRateValue.getText()));
-            int batches = Integer.parseInt(fnDataPoints.getText()) / Integer.parseInt(batchSizeValue.getText());
+
+            optAlg = OptimizationAlgorithm.values()[optimisationAlgo.getSelectedIndex()];
+            lossFn = LossFunctions.LossFunction.values()[lossFunc.getSelectedIndex()];
+            func = funcT.getText().toLowerCase();
+            xmin = Double.parseDouble(fxMin.getText());
+            xmax = Double.parseDouble(fxMax.getText());
+            nDataPoints = Integer.parseInt(fnDataPoints.getText());
+            batchSize = Integer.parseInt(batchSizeValue.getText());
+            nEpochs = Integer.parseInt(epochsValue.getText());
+            iterations = ((int) ((long) iterationsValue.getValue()));
+            learningRate = Double.parseDouble(learningRateValue.getText());
+            plotFrequency = nEpochs / Integer.parseInt(numOutFunc.getText());
+
+            if (randomSeedCheckBox.isSelected()) {
+                seed = new Random().nextInt();
+            } else {
+                seed = Integer.parseInt(seedValue.getText());
+            }
+
+            int batches = (int) Math.ceil(((double) nDataPoints) / batchSize);
             if (batches < 1) batches = 1;
-            totalEpochs = Integer.parseInt(epochsValue.getText()) * (Integer) iterationsValue.getValue() * batches;
+            totalEpochs = nEpochs * iterations * batches;
+
+            obj.put("func", func);
+            obj.put("xmin", xmin);
+            obj.put("xmax", xmax);
+            obj.put("nDataPoints", nDataPoints);
+            obj.put("nEpochs", nEpochs);
+            obj.put("plotFrequency", plotFrequency);
+            obj.put("randSeed", randomSeedCheckBox.isSelected());
+            obj.put("seed", seed);
+            obj.put("iterations", iterations);
+            obj.put("batchSize", batchSize);
+            obj.put("learningRate", learningRate);
             obj.put("totalEpochs", totalEpochs);
             obj.put("numOutFunc", Integer.parseInt(numOutFunc.getText()));
 
@@ -165,39 +188,50 @@ public class GUIRmt extends JFrame {
                 file.flush();
                 file.close();
 
-                ChartUtilities.saveChartAsPNG(new File(cfgFile.getAbsolutePath() + "-approximation.png"), chartPanel.getChart(), 1920, 1080);
-                ChartUtilities.saveChartAsPNG(new File(cfgFile.getAbsolutePath() + "-learning.png"), learn.chartPanel.getChart(), 1920, 1080);
+                if (chartPanel.getChart().getXYPlot().getSeriesCount() > 0) {
+                    ChartUtilities.saveChartAsPNG(new File(cfgFile.getAbsolutePath() + "-approximation.png"), chartPanel.getChart(), 1920, 1080);
+                    ChartUtilities.saveChartAsPNG(new File(cfgFile.getAbsolutePath() + "-learning.png"), learn.chartPanel.getChart(), 1920, 1080);
+                }
             } catch (IOException e) {
-                JOptionPane.showMessageDialog(null, "Error while saving configuration!", "Saving error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Error while saving configuration!", "Saving error", JOptionPane.ERROR_MESSAGE);
                 e.printStackTrace();
             }
         } else {
-            int choise = chooser.showOpenDialog(this);
-            if (choise != JFileChooser.APPROVE_OPTION) return;
+            int choice = chooser.showOpenDialog(this);
+            if (choice != JFileChooser.APPROVE_OPTION) return;
             cfgFile = chooser.getSelectedFile();
             try {
                 JSONParser parser = new JSONParser();
-                JSONObject obj = (JSONObject) parser.parse(cfgFile.getAbsolutePath());
+                JSONObject obj = (JSONObject) parser.parse(new FileReader(cfgFile));
                 funcT.setText((String) obj.get("func"));
                 fxMin.setText(String.valueOf((double) obj.get("xmin")));
                 fxMax.setText(String.valueOf((double) obj.get("xmax")));
-                fnDataPoints.setText(String.valueOf((int) obj.get("nDataPoints")));
-                seedValue.setText(String.valueOf((int) obj.get("seed")));
-                iterationsValue.setValue(String.valueOf((int) obj.get("iterations")));
-                epochsValue.setText(String.valueOf((int) obj.get("nEpochs")));
-                batchSizeValue.setText(String.valueOf((int) obj.get("batchSize")));
+                fnDataPoints.setText(obj.get("nDataPoints").toString());
+                randomSeedCheckBox.setSelected((boolean) obj.get("randSeed"));
+                seedValue.setText(String.valueOf(obj.get("seed")));
+                iterationsValue.setValue(obj.get("iterations"));
+                epochsValue.setText(String.valueOf(obj.get("nEpochs")));
+                batchSizeValue.setText(String.valueOf(obj.get("batchSize")));
                 learningRateValue.setText(String.valueOf((double) obj.get("learningRate")));
-                numOutFunc.setText(String.valueOf((int) obj.get("numOutFunc")));
+                numOutFunc.setText(String.valueOf(obj.get("numOutFunc")));
 
                 JSONArray layersArray = (JSONArray) obj.get("networkCfg");
+                StringBuilder bCfg = new StringBuilder();
+                networkCfg = new int[layersArray.size()];
                 for (int i = 0; i < layersArray.size(); ++i) {
-                    networkCfg[i] = (Integer) layersArray.get(i);
+                    networkCfg[i] = ((Long) layersArray.get(i)).intValue();
+                    bCfg.append(networkCfg[i]).append(", ");
                 }
+                layersCfg.setText(bCfg.substring(0, bCfg.length() - 2));
 
-                optAlg = OptimizationAlgorithm.values()[(int) obj.get("optAlg")];
-                lossFn = LossFunctions.LossFunction.values()[(int) obj.get("lossFn")];
+                optAlg = OptimizationAlgorithm.values()[((Long) obj.get("optAlg")).intValue()];
+                lossFn = LossFunctions.LossFunction.values()[((Long) obj.get("lossFn")).intValue()];
             } catch (ParseException e) {
-                JOptionPane.showMessageDialog(null, "Error while loading configuration! Please, select another file.", "Configuration parsing error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Error while loading configuration! Please, select another file.", "Configuration parsing error", JOptionPane.ERROR_MESSAGE);
+                e.printStackTrace();
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
                 e.printStackTrace();
             }
         }
@@ -241,7 +275,7 @@ public class GUIRmt extends JFrame {
 
     private void onStart() {
         if (getThreadByName("soarex-neuro") != null) {
-            JOptionPane.showMessageDialog(null, "Another learning process is already running", "Please, wait", JOptionPane.INFORMATION_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Another learning process is already running", "Please, wait", JOptionPane.INFORMATION_MESSAGE);
             return;
         }
 
@@ -258,11 +292,12 @@ public class GUIRmt extends JFrame {
         nDataPoints = Integer.parseInt(fnDataPoints.getText());
         batchSize = Integer.parseInt(batchSizeValue.getText());
         nEpochs = Integer.parseInt(epochsValue.getText());
-        iterations = (Integer) iterationsValue.getValue();
+        //long iterL = ;
+        iterations = ((int) ((long) iterationsValue.getValue()));
         learningRate = Double.parseDouble(learningRateValue.getText());
         plotFrequency = nEpochs / Integer.parseInt(numOutFunc.getText());
 
-        int batches = nDataPoints / batchSize;
+        int batches = (int) Math.ceil(((double) nDataPoints) / batchSize);
         if (batches < 1) batches = 1;
         totalEpochs = nEpochs * iterations * batches;
 
@@ -325,7 +360,7 @@ public class GUIRmt extends JFrame {
                         .activation("tanh")
                         .build());
         /*if (networkCfg.length <= 1) {
-            JOptionPane.showMessageDialog(null, "Configuration of  layers of the neural network is incorrect. Note that the number of parameters must be greater than 1.", "Incorrect configuration", JOptionPane.INFORMATION_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Configuration of  layers of the neural network is incorrect. Note that the number of parameters must be greater than 1.", "Incorrect configuration", JOptionPane.INFORMATION_MESSAGE);
         }*/ //bug
         for (int i = 0; i < networkCfg.length; ++i) {
             listBuilder.layer(i + 1, new DenseLayer.Builder().nIn(networkCfg[i]).nOut(i + 1 < networkCfg.length ? networkCfg[i + 1] : networkCfg[i])
@@ -375,6 +410,8 @@ public class GUIRmt extends JFrame {
                 false
         );
         chart.setBackgroundPaint(new Color(0xE8E8E8));
+        chart.getXYPlot().setRangePannable(true);
+        chart.getXYPlot().setDomainPannable(true);
         chartPanel = new ChartPanel(chart);
         chartPanel.addMouseWheelListener(new MouseWheelHandler(chartPanel));
         chartPanel.setFillZoomRectangle(false);
