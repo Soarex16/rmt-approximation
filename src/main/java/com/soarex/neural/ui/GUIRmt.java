@@ -134,27 +134,7 @@ public class GUIRmt extends JFrame {
             if (choice != JFileChooser.APPROVE_OPTION) return;
             JSONObject obj = new JSONObject();
 
-            optAlg = OptimizationAlgorithm.values()[optimisationAlgo.getSelectedIndex()];
-            lossFn = LossFunctions.LossFunction.values()[lossFunc.getSelectedIndex()];
-            func = funcT.getText().toLowerCase();
-            xmin = Double.parseDouble(fxMin.getText());
-            xmax = Double.parseDouble(fxMax.getText());
-            nDataPoints = Integer.parseInt(fnDataPoints.getText());
-            batchSize = Integer.parseInt(batchSizeValue.getText());
-            nEpochs = Integer.parseInt(epochsValue.getText());
-            iterations = ((int) ((long) iterationsValue.getValue()));
-            learningRate = Double.parseDouble(learningRateValue.getText());
-            plotFrequency = nEpochs / Integer.parseInt(numOutFunc.getText());
-
-            if (randomSeedCheckBox.isSelected()) {
-                seed = new Random().nextInt();
-            } else {
-                seed = Integer.parseInt(seedValue.getText());
-            }
-
-            int batches = (int) Math.ceil(((double) nDataPoints) / batchSize);
-            if (batches < 1) batches = 1;
-            totalEpochs = nEpochs * iterations * batches;
+            setVars();
 
             obj.put("func", func);
             obj.put("xmin", xmin);
@@ -170,11 +150,6 @@ public class GUIRmt extends JFrame {
             obj.put("totalEpochs", totalEpochs);
             obj.put("numOutFunc", Integer.parseInt(numOutFunc.getText()));
 
-            String[] nCfg = layersCfg.getText().replace(" ", "").split(",");
-            networkCfg = new int[nCfg.length];
-            for (int i = 0; i < nCfg.length; ++i) {
-                networkCfg[i] = Integer.parseInt(nCfg[i]);
-            }
             JSONArray layersArray = new JSONArray();
             for (int i = 0; i < networkCfg.length; ++i) {
                 layersArray.add(i, networkCfg[i]);
@@ -237,6 +212,36 @@ public class GUIRmt extends JFrame {
         }
     }
 
+    private void setVars() {
+        if (randomSeedCheckBox.isSelected()) {
+            seed = new Random().nextInt();
+        } else {
+            seed = Integer.parseInt(seedValue.getText());
+        }
+
+        optAlg = OptimizationAlgorithm.values()[optimisationAlgo.getSelectedIndex()];
+        lossFn = LossFunctions.LossFunction.values()[lossFunc.getSelectedIndex()];
+        func = funcT.getText().toLowerCase();
+        xmin = Double.parseDouble(fxMin.getText());
+        xmax = Double.parseDouble(fxMax.getText());
+        nDataPoints = Integer.parseInt(fnDataPoints.getText());
+        batchSize = Integer.parseInt(batchSizeValue.getText());
+        nEpochs = Integer.parseInt(epochsValue.getText());
+        iterations = ((int) ((long) iterationsValue.getValue()));
+        learningRate = Double.parseDouble(learningRateValue.getText());
+        plotFrequency = nEpochs / Integer.parseInt(numOutFunc.getText());
+
+        int batches = (int) Math.ceil(((double) nDataPoints) / batchSize);
+        if (batches < 1) batches = 1;
+        totalEpochs = nEpochs * iterations * batches;
+
+        String[] nCfg = layersCfg.getText().replace(" ", "").split(",");
+        networkCfg = new int[nCfg.length];
+        for (int i = 0; i < nCfg.length; ++i) {
+            networkCfg[i] = Integer.parseInt(nCfg[i]);
+        }
+    }
+
     private void credits() {
         if (about.isVisible()) {
             about.setVisible(false);
@@ -279,33 +284,7 @@ public class GUIRmt extends JFrame {
             return;
         }
 
-        if (randomSeedCheckBox.isSelected()) {
-            seed = new Random().nextInt();
-        } else {
-            seed = Integer.parseInt(seedValue.getText());
-        }
-        optAlg = OptimizationAlgorithm.values()[optimisationAlgo.getSelectedIndex()];
-        lossFn = LossFunctions.LossFunction.values()[lossFunc.getSelectedIndex()];
-        func = funcT.getText().toLowerCase();
-        xmin = Double.parseDouble(fxMin.getText());
-        xmax = Double.parseDouble(fxMax.getText());
-        nDataPoints = Integer.parseInt(fnDataPoints.getText());
-        batchSize = Integer.parseInt(batchSizeValue.getText());
-        nEpochs = Integer.parseInt(epochsValue.getText());
-        //long iterL = ;
-        iterations = ((int) ((long) iterationsValue.getValue()));
-        learningRate = Double.parseDouble(learningRateValue.getText());
-        plotFrequency = nEpochs / Integer.parseInt(numOutFunc.getText());
-
-        int batches = (int) Math.ceil(((double) nDataPoints) / batchSize);
-        if (batches < 1) batches = 1;
-        totalEpochs = nEpochs * iterations * batches;
-
-        String[] nCfg = layersCfg.getText().replace(" ", "").split(",");
-        networkCfg = new int[nCfg.length];
-        for (int i = 0; i < nCfg.length; ++i) {
-            networkCfg[i] = Integer.parseInt(nCfg[i]);
-        }
+        setVars();
 
         final INDArray x = Nd4j.linspace((int) xmin, (int) xmax, nDataPoints).reshape(nDataPoints, 1);
         final INDArray y = getFunctionValues(func, x);
