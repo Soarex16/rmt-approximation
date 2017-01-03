@@ -54,7 +54,6 @@ dependencies {
     exported 'org.slf4j:slf4j-simple:1.7.21'
     exported 'net.objecthunter:exp4j:0.4.7'
     exported 'com.googlecode.json-simple:json-simple:1.1.1'
-
     exported 'com.intellij:forms_rt:7.0.3'
     exported 'com.bulenkov.darcula:darcula:1.0.0'
 
