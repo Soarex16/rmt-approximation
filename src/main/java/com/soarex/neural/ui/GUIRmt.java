@@ -20,10 +20,9 @@ import org.jfree.chart.ChartUtilities;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.data.xy.XYSeriesCollection;
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
+import org.json.JSONArray;
+import org.json.JSONObject;
+import org.json.JSONTokener;
 import org.nd4j.linalg.api.ndarray.INDArray;
 import org.nd4j.linalg.dataset.api.iterator.DataSetIterator;
 import org.nd4j.linalg.factory.Nd4j;
@@ -77,6 +76,8 @@ public class GUIRmt extends JFrame {
     private GUIAbout about = new GUIAbout();
 
     private int totalEpochs = 0;
+    private int saveWidth = 1920;
+    private int saveHeight = 1080;
 
     private GUIRmt() {
         try {
@@ -120,7 +121,9 @@ public class GUIRmt extends JFrame {
 
     private void onStop() {
         Thread nn = getThreadByName("soarex-neuro");
-        if (nn != null) nn.stop();
+        if (nn != null) {
+            nn.stop();
+        }
     }
 
     private void saveLoadCfg(boolean save) {
@@ -150,22 +153,22 @@ public class GUIRmt extends JFrame {
             obj.put("totalEpochs", totalEpochs);
             obj.put("numOutFunc", Integer.parseInt(numOutFunc.getText()));
 
-            JSONArray layersArray = new JSONArray();
-            for (int i = 0; i < networkCfg.length; ++i) {
-                layersArray.add(i, networkCfg[i]);
-            }
+            JSONArray layersArray = new JSONArray(networkCfg);
             obj.put("networkCfg", layersArray);
 
             obj.put("optAlg", optimisationAlgo.getSelectedIndex());
             obj.put("lossFn", lossFunc.getSelectedIndex());
+
+            obj.put("saveWidth", saveWidth);
+            obj.put("saveHeight", saveHeight);
             try (FileWriter file = new FileWriter(cfgFile)) {
-                file.write(obj.toJSONString());
+                file.write(obj.toString());
                 file.flush();
                 file.close();
 
-                if (chartPanel.getChart().getXYPlot().getSeriesCount() > 0) {
-                    ChartUtilities.saveChartAsPNG(new File(cfgFile.getAbsolutePath() + "-approximation.png"), chartPanel.getChart(), 1920, 1080);
-                    ChartUtilities.saveChartAsPNG(new File(cfgFile.getAbsolutePath() + "-learning.png"), learn.chartPanel.getChart(), 1920, 1080);
+                if (chartPanel.getChart().getXYPlot().getSeriesCount() > 0 && getThreadByName("soarex-neuro") == null) {
+                    ChartUtilities.saveChartAsPNG(new File(cfgFile.getAbsolutePath() + "-approximation.png"), chartPanel.getChart(), saveWidth, saveHeight);
+                    ChartUtilities.saveChartAsPNG(new File(cfgFile.getAbsolutePath() + "-learning.png"), learn.chartPanel.getChart(), saveWidth, saveHeight);
                 }
             } catch (IOException e) {
                 JOptionPane.showMessageDialog(this, "Error while saving configuration!", "Saving error", JOptionPane.ERROR_MESSAGE);
@@ -176,34 +179,33 @@ public class GUIRmt extends JFrame {
             if (choice != JFileChooser.APPROVE_OPTION) return;
             cfgFile = chooser.getSelectedFile();
             try {
-                JSONParser parser = new JSONParser();
-                JSONObject obj = (JSONObject) parser.parse(new FileReader(cfgFile));
-                funcT.setText((String) obj.get("func"));
-                fxMin.setText(String.valueOf((double) obj.get("xmin")));
-                fxMax.setText(String.valueOf((double) obj.get("xmax")));
+                JSONObject obj = new JSONObject(new JSONTokener(new FileReader(cfgFile)));
+                funcT.setText(obj.get("func").toString());
+                fxMin.setText(obj.get("xmin").toString());
+                fxMax.setText(obj.get("xmax").toString());
                 fnDataPoints.setText(obj.get("nDataPoints").toString());
-                randomSeedCheckBox.setSelected((boolean) obj.get("randSeed"));
-                seedValue.setText(String.valueOf(obj.get("seed")));
+                randomSeedCheckBox.setSelected(obj.getBoolean("randSeed"));
+                seedValue.setText(obj.get("seed").toString());
                 iterationsValue.setValue(obj.get("iterations"));
-                epochsValue.setText(String.valueOf(obj.get("nEpochs")));
-                batchSizeValue.setText(String.valueOf(obj.get("batchSize")));
-                learningRateValue.setText(String.valueOf((double) obj.get("learningRate")));
-                numOutFunc.setText(String.valueOf(obj.get("numOutFunc")));
+                epochsValue.setText(obj.get("nEpochs").toString());
+                batchSizeValue.setText(obj.get("batchSize").toString());
+                learningRateValue.setText(obj.get("learningRate").toString());
+                numOutFunc.setText(obj.get("numOutFunc").toString());
 
-                JSONArray layersArray = (JSONArray) obj.get("networkCfg");
+                JSONArray layersArray = obj.getJSONArray("networkCfg");
                 StringBuilder bCfg = new StringBuilder();
-                networkCfg = new int[layersArray.size()];
-                for (int i = 0; i < layersArray.size(); ++i) {
-                    networkCfg[i] = ((Long) layersArray.get(i)).intValue();
+                networkCfg = new int[layersArray.length()];
+                for (int i = 0; i < layersArray.length(); ++i) {
+                    networkCfg[i] = layersArray.getInt(i);
                     bCfg.append(networkCfg[i]).append(", ");
                 }
                 layersCfg.setText(bCfg.substring(0, bCfg.length() - 2));
 
-                optAlg = OptimizationAlgorithm.values()[((Long) obj.get("optAlg")).intValue()];
-                lossFn = LossFunctions.LossFunction.values()[((Long) obj.get("lossFn")).intValue()];
-            } catch (ParseException e) {
-                JOptionPane.showMessageDialog(this, "Error while loading configuration! Please, select another file.", "Configuration parsing error", JOptionPane.ERROR_MESSAGE);
-                e.printStackTrace();
+                optAlg = OptimizationAlgorithm.values()[obj.getInt("optAlg")];
+                lossFn = LossFunctions.LossFunction.values()[obj.getInt("lossFn")];
+
+                saveWidth = obj.getInt("saveWidth");
+                saveHeight = obj.getInt("saveHeight");
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
             } catch (IOException e) {
@@ -227,7 +229,8 @@ public class GUIRmt extends JFrame {
         nDataPoints = Integer.parseInt(fnDataPoints.getText());
         batchSize = Integer.parseInt(batchSizeValue.getText());
         nEpochs = Integer.parseInt(epochsValue.getText());
-        iterations = ((int) ((long) iterationsValue.getValue()));
+        Number spinnerObj = (Number) iterationsValue.getValue();
+        iterations = spinnerObj.intValue();
         learningRate = Double.parseDouble(learningRateValue.getText());
         plotFrequency = nEpochs / Integer.parseInt(numOutFunc.getText());
 
@@ -298,13 +301,11 @@ public class GUIRmt extends JFrame {
             progressBar.setMaximum(totalEpochs);
             progressBar.setValue(0);
 
-            //Create the network
             MultiLayerConfiguration config = getParametrisedDeepNetworkConfiguration();
             final MultiLayerNetwork net = new MultiLayerNetwork(config);
             net.init();
             net.setListeners(new CustomIterationListener(1, totalEpochs, iterCL, progressBar, learn));
 
-            //Train the network on the full data set, and evaluate in periodically
             final INDArray[] networkPredictions = new INDArray[nEpochs / plotFrequency];
 
             for (int i = 0; i < nEpochs; ++i) {
@@ -338,9 +339,6 @@ public class GUIRmt extends JFrame {
                 .layer(0, new DenseLayer.Builder().nIn(numInputs).nOut(networkCfg[0])
                         .activation("tanh")
                         .build());
-        /*if (networkCfg.length <= 1) {
-            JOptionPane.showMessageDialog(this, "Configuration of  layers of the neural network is incorrect. Note that the number of parameters must be greater than 1.", "Incorrect configuration", JOptionPane.INFORMATION_MESSAGE);
-        }*/ //bug
         for (int i = 0; i < networkCfg.length; ++i) {
             listBuilder.layer(i + 1, new DenseLayer.Builder().nIn(networkCfg[i]).nOut(i + 1 < networkCfg.length ? networkCfg[i + 1] : networkCfg[i])
                     .activation("tanh")
@@ -371,7 +369,7 @@ public class GUIRmt extends JFrame {
                 true,
                 false
         );
-        chart.setBackgroundPaint(new Color(0xE8E8E8));
+        chart.setBackgroundPaint(UIManager.getColor("window"));
         chart.getXYPlot().setRangePannable(true);
         chart.getXYPlot().setDomainPannable(true);
         chartPanel.setChart(chart);
@@ -388,7 +386,7 @@ public class GUIRmt extends JFrame {
                 true,
                 false
         );
-        chart.setBackgroundPaint(new Color(0xE8E8E8));
+        chart.setBackgroundPaint(UIManager.getColor("window"));
         chart.getXYPlot().setRangePannable(true);
         chart.getXYPlot().setDomainPannable(true);
         chartPanel = new ChartPanel(chart);
@@ -479,8 +477,8 @@ public class GUIRmt extends JFrame {
         panel4.setVisible(true);
         contentPane.add(panel4, new GridConstraints(3, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
         optionsMore = new JPanel();
-        optionsMore.setLayout(new GridLayoutManager(7, 7, new Insets(0, 0, 0, 0), -1, -1));
-        optionsMore.setVisible(false);
+        optionsMore.setLayout(new GridLayoutManager(6, 7, new Insets(0, 0, 0, 0), -1, -1));
+        optionsMore.setVisible(true);
         panel4.add(optionsMore, new GridConstraints(1, 0, 1, 5, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
         layersCfg = new JTextField();
         layersCfg.setText("50, 50, 50, 50, 50, 50, 50, 50");
@@ -493,61 +491,61 @@ public class GUIRmt extends JFrame {
         learningRateValue = new JTextField();
         learningRateValue.setText("0.01");
         learningRateValue.setToolTipText("Network learning rate");
-        optionsMore.add(learningRateValue, new GridConstraints(1, 1, 1, 6, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        optionsMore.add(learningRateValue, new GridConstraints(1, 1, 1, 3, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         final JLabel label6 = new JLabel();
         label6.setText("Learning rate");
         optionsMore.add(label6, new GridConstraints(1, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
-        epochsValue = new JTextField();
-        epochsValue.setText("2000");
-        epochsValue.setToolTipText("Number of epochs (full passes of the data)");
-        optionsMore.add(epochsValue, new GridConstraints(2, 1, 1, 6, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         numOutFunc = new JTextField();
         numOutFunc.setText("4");
         numOutFunc.setToolTipText("Number of output approximating functions");
-        optionsMore.add(numOutFunc, new GridConstraints(3, 1, 1, 6, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        optionsMore.add(numOutFunc, new GridConstraints(2, 1, 1, 6, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         final JLabel label7 = new JLabel();
-        label7.setText("Epochs");
+        label7.setText("Number of output functions");
+        label7.setVisible(true);
         optionsMore.add(label7, new GridConstraints(2, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         final JLabel label8 = new JLabel();
-        label8.setText("Number of output functions");
-        label8.setVisible(true);
-        optionsMore.add(label8, new GridConstraints(3, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
-        final JLabel label9 = new JLabel();
-        label9.setText("Seed");
-        optionsMore.add(label9, new GridConstraints(4, 4, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        label8.setText("Seed");
+        optionsMore.add(label8, new GridConstraints(3, 4, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         randomSeedCheckBox = new JCheckBox();
         randomSeedCheckBox.setHideActionText(false);
         randomSeedCheckBox.setSelected(true);
         randomSeedCheckBox.setText("random seed");
-        optionsMore.add(randomSeedCheckBox, new GridConstraints(4, 6, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
-        final JLabel label10 = new JLabel();
-        label10.setText("Batch size");
-        optionsMore.add(label10, new GridConstraints(4, 2, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        optionsMore.add(randomSeedCheckBox, new GridConstraints(3, 6, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        final JLabel label9 = new JLabel();
+        label9.setText("Batch size");
+        optionsMore.add(label9, new GridConstraints(3, 2, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         batchSizeValue = new JTextField();
         batchSizeValue.setText("100");
         batchSizeValue.setToolTipText("Batch size: i.e., each epoch has nDataPoints/batchSize parameter updates");
-        optionsMore.add(batchSizeValue, new GridConstraints(4, 3, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
-        final JLabel label11 = new JLabel();
-        label11.setText("Iterations");
-        optionsMore.add(label11, new GridConstraints(4, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        optionsMore.add(batchSizeValue, new GridConstraints(3, 3, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        final JLabel label10 = new JLabel();
+        label10.setText("Iterations");
+        optionsMore.add(label10, new GridConstraints(3, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         iterationsValue = new JSpinner();
         iterationsValue.setToolTipText("Number of iterations per minibatch");
-        optionsMore.add(iterationsValue, new GridConstraints(4, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
-        final JLabel label12 = new JLabel();
-        label12.setText("Optimisation algorithm");
-        optionsMore.add(label12, new GridConstraints(5, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        optionsMore.add(iterationsValue, new GridConstraints(3, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        final JLabel label11 = new JLabel();
+        label11.setText("Optimisation algorithm");
+        optionsMore.add(label11, new GridConstraints(4, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         optimisationAlgo.setToolTipText("Optimization algorithm to use");
-        optionsMore.add(optimisationAlgo, new GridConstraints(5, 1, 1, 6, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
-        final JLabel label13 = new JLabel();
-        label13.setText("Loss function");
-        optionsMore.add(label13, new GridConstraints(6, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
-        lossFunc.setToolTipText("<html><b>Loss functions representing the price paid for inaccuracy of predictions</b><br>\n<b>MSE:</b> Mean Squared Error: Linear Regression<br>\n<b>EXPLL:</b> Exponential log likelihood: Poisson Regression<br>\n<b>XENT:</b> Cross Entropy: Binary Classification<br>\n<b>MCXENT:</b> Multiclass Cross Entropy<br>\n<b>RMSE_XENT:</b> RMSE Cross Entropy<br>\n<b>SQUARED_LOSS:</b> Squared Loss<br>\n<b>NEGATIVELOGLIKELIHOOD:</b> Negative Log Likelihood<br>\n</html>");
-        optionsMore.add(lossFunc, new GridConstraints(6, 1, 1, 6, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        optionsMore.add(optimisationAlgo, new GridConstraints(4, 1, 1, 6, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        final JLabel label12 = new JLabel();
+        label12.setText("Loss function");
+        optionsMore.add(label12, new GridConstraints(5, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        lossFunc.setToolTipText("<html><b>Loss function representing the price paid for inaccuracy of predictions</b><br> <b>MSE:</b> Mean Squared Error: Linear Regression<br> <b>EXPLL:</b> Exponential log likelihood: Poisson Regression<br> <b>XENT:</b> Cross Entropy: Binary Classification<br> <b>MCXENT:</b> Multiclass Cross Entropy<br> <b>RMSE_XENT:</b> RMSE Cross Entropy<br> <b>SQUARED_LOSS:</b> Squared Loss<br> <b>NEGATIVELOGLIKELIHOOD:</b> Negative Log Likelihood<br> </html>");
+        optionsMore.add(lossFunc, new GridConstraints(5, 1, 1, 6, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         seedValue = new JTextField();
         seedValue.setEnabled(false);
         seedValue.setText("0");
         seedValue.setToolTipText("Random number generator seed, need for reproducibility");
-        optionsMore.add(seedValue, new GridConstraints(4, 5, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        optionsMore.add(seedValue, new GridConstraints(3, 5, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        epochsValue = new JTextField();
+        epochsValue.setText("2000");
+        epochsValue.setToolTipText("Number of epochs (full passes of the data)");
+        optionsMore.add(epochsValue, new GridConstraints(1, 5, 1, 2, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        final JLabel label13 = new JLabel();
+        label13.setText("Epochs");
+        optionsMore.add(label13, new GridConstraints(1, 4, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         final Spacer spacer1 = new Spacer();
         panel4.add(spacer1, new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, 1, null, null, null, 0, false));
         buttonMoreLess = new JButton();

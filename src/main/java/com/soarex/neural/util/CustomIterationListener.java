@@ -12,8 +12,8 @@ import javax.swing.*;
  * Created by soarex on 26.12.16.
  */
 public class CustomIterationListener implements IterationListener {
-    private int printIterations = 10;
     private static final Logger log = LoggerFactory.getLogger(CustomIterationListener.class);
+    private int printIterations = 10;
     private boolean invoked = false;
     private long iterCount = 0;
     private JProgressBar bar;
