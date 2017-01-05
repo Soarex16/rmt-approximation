@@ -478,7 +478,7 @@ public class GUIRmt extends JFrame {
         contentPane.add(panel4, new GridConstraints(3, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
         optionsMore = new JPanel();
         optionsMore.setLayout(new GridLayoutManager(6, 7, new Insets(0, 0, 0, 0), -1, -1));
-        optionsMore.setVisible(true);
+        optionsMore.setVisible(false);
         panel4.add(optionsMore, new GridConstraints(1, 0, 1, 5, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
         layersCfg = new JTextField();
         layersCfg.setText("50, 50, 50, 50, 50, 50, 50, 50");
