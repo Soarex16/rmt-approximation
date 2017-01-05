@@ -251,14 +251,6 @@
                   <visible value="true"/>
                 </properties>
               </component>
-              <component id="56073" class="javax.swing.JLabel">
-                <constraints>
-                  <grid row="3" column="5" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
-                </constraints>
-                <properties>
-                  <text value="Seed"/>
-                </properties>
-              </component>
               <component id="32676" class="javax.swing.JCheckBox" binding="randomSeedCheckBox" default-binding="true">
                 <constraints>
                   <grid row="3" column="7" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
@@ -279,7 +271,7 @@
               </component>
               <component id="d9c10" class="javax.swing.JTextField" binding="batchSizeValue">
                 <constraints>
-                  <grid row="3" column="3" row-span="1" col-span="2" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false"/>
+                  <grid row="3" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="2" anchor="8" fill="1" indent="0" use-parent-layout="false"/>
                 </constraints>
                 <properties>
                   <text value="100"/>
@@ -336,7 +328,7 @@
               </component>
               <component id="7a216" class="javax.swing.JTextField" binding="seedValue">
                 <constraints>
-                  <grid row="3" column="6" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false"/>
+                  <grid row="3" column="5" row-span="1" col-span="2" vsize-policy="0" hsize-policy="2" anchor="8" fill="1" indent="0" use-parent-layout="false"/>
                 </constraints>
                 <properties>
                   <enabled value="false"/>
@@ -363,7 +355,7 @@
               </component>
               <component id="59d59" class="javax.swing.JLabel">
                 <constraints>
-                  <grid row="2" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+                  <grid row="2" column="3" row-span="1" col-span="2" vsize-policy="0" hsize-policy="0" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
                 </constraints>
                 <properties>
                   <text value="Weight init"/>
@@ -371,10 +363,18 @@
               </component>
               <component id="89706" class="javax.swing.JComboBox" binding="weightInit" custom-create="true">
                 <constraints>
-                  <grid row="2" column="4" row-span="1" col-span="4" vsize-policy="0" hsize-policy="2" anchor="8" fill="1" indent="0" use-parent-layout="false"/>
+                  <grid row="2" column="5" row-span="1" col-span="3" vsize-policy="0" hsize-policy="2" anchor="8" fill="1" indent="0" use-parent-layout="false"/>
                 </constraints>
                 <properties>
                   <toolTipText value="&lt;html&gt;&#10;&lt;b&gt;Weight initialization scheme&lt;/b&gt;&lt;br&gt;&#10;&lt;b&gt;DISTRIBUTION&lt;/b&gt;: Sample weights from a provided distribution&lt;br&gt;&#10;&lt;b&gt;ZERO&lt;/b&gt;: Generate weights as zeros&lt;br&gt;&#10;&lt;b&gt;SIGMOID_UNIFORM&lt;/b&gt;: A version of XAVIER_UNIFORM for sigmoid activation functions. U(-r,r) with r=4*sqrt(6/(fanIn + fanOut))&lt;br&gt;&#10;&lt;b&gt;UNIFORM&lt;/b&gt;: Uniform U[-a,a] with a=1/sqrt(fanIn). &quot;Commonly used heuristic&quot; as per Glorot and Bengio 2010&lt;br&gt;&#10;&lt;b&gt;XAVIER&lt;/b&gt;: As per Glorot and Bengio 2010: Gaussian distribution with mean 0, variance 2.0/(fanIn + fanOut)&lt;br&gt;&#10;&lt;b&gt;XAVIER_UNIFORM&lt;/b&gt;: As per Glorot and Bengio 2010: Uniform distribution U(-s,s) with s = sqrt(6/(fanIn + fanOut))&lt;br&gt;&#10;&lt;b&gt;XAVIER_FAN_IN&lt;/b&gt;: Similar to Xavier, but 1/fanIn -&gt; Caffe originally used this.&lt;br&gt;&#10;&lt;b&gt;XAVIER_LEGACY&lt;/b&gt;: Xavier weight init in DL4J up to 0.6.0. XAVIER should be preferred.&lt;br&gt;&#10;&lt;b&gt;RELU&lt;/b&gt;: He et al. (2015), &quot;Delving Deep into Rectifiers&quot;. Normal distribution with variance 2.0/nIn&lt;br&gt;&#10;&lt;b&gt;RELU_UNIFORM&lt;/b&gt;: He et al. (2015), &quot;Delving Deep into Rectifiers&quot;. Uniform distribution U(-s,s) with s = sqrt(6/fanIn)&#10;&lt;/html&gt;"/>
+                </properties>
+              </component>
+              <component id="56073" class="javax.swing.JLabel">
+                <constraints>
+                  <grid row="3" column="4" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+                </constraints>
+                <properties>
+                  <text value="Seed"/>
                 </properties>
               </component>
             </children>
