@@ -164,7 +164,7 @@
             </constraints>
             <properties>
               <text value=""/>
-              <toolTipText value="&lt;html&gt;&#10;&lt;b&gt;Predefined available functions:&lt;/b&gt;&#10;&lt;br&gt;abs: absolute value&#10;&lt;br&gt;acos: arc cosine&#10;&lt;br&gt;asin: arc sine&#10;&lt;br&gt;atan: arc tangent&#10;&lt;br&gt;cbrt: cubic root&#10;&lt;br&gt;ceil: nearest upper integer&#10;&lt;br&gt;cos: cosine&#10;&lt;br&gt;cosh: hyperbolic cosine&#10;&lt;br&gt;exp: euler's number raised to the power (e^x)&#10;&lt;br&gt;floor: nearest lower integer&#10;&lt;br&gt;log: logarithmus naturalis (base e)&#10;&lt;br&gt;log10: logarithm (base 10)&#10;&lt;br&gt;log2: logarithm (base 2)&#10;&lt;br&gt;sin: sine&#10;&lt;br&gt;sinh: hyperbolic sine&#10;&lt;br&gt;sqrt: square root&#10;&lt;br&gt;tan: tangent&#10;&lt;br&gt;tanh: hyperbolic tangent&#10;&lt;br&gt;signum: signum function&#10;&lt;/html&gt;"/>
+              <toolTipText value="&lt;html&gt;&#10;&lt;b&gt;Predefined available functions:&lt;/b&gt;&lt;br&gt;&#10;&lt;b&gt;abs&lt;/b&gt;: absolute value&lt;br&gt;&#10;&lt;b&gt;acos&lt;/b&gt;: arc cosine&lt;br&gt;&#10;&lt;b&gt;asin&lt;/b&gt;: arc sine&lt;br&gt;&#10;&lt;b&gt;atan&lt;/b&gt;: arc tangent&lt;br&gt;&#10;&lt;b&gt;cbrt&lt;/b&gt;: cubic root&lt;br&gt;&#10;&lt;b&gt;ceil&lt;/b&gt;: nearest upper integer&lt;br&gt;&#10;&lt;b&gt;cos&lt;/b&gt;: cosine&lt;br&gt;&#10;&lt;b&gt;cosh&lt;/b&gt;: hyperbolic cosine&lt;br&gt;&#10;&lt;b&gt;exp&lt;/b&gt;: euler's number raised to the power (e^x)&lt;br&gt;&#10;&lt;b&gt;floor&lt;/b&gt;: nearest lower integer&lt;br&gt;&#10;&lt;b&gt;log&lt;/b&gt;: logarithmus naturalis (base e)&lt;br&gt;&#10;&lt;b&gt;log10&lt;/b&gt;: logarithm (base 10)&lt;br&gt;&#10;&lt;b&gt;log2&lt;/b&gt;: logarithm (base 2)&lt;br&gt;&#10;&lt;b&gt;sin&lt;/b&gt;: sine&lt;br&gt;&#10;&lt;b&gt;sinh&lt;/b&gt;: hyperbolic sine&lt;br&gt;&#10;&lt;b&gt;sqrt&lt;/b&gt;: square root&lt;br&gt;&#10;&lt;b&gt;tan&lt;/b&gt;: tangent&lt;br&gt;&#10;&lt;b&gt;tanh&lt;/b&gt;: hyperbolic tangent&lt;br&gt;&#10;&lt;b&gt;signum&lt;/b&gt;: signum function&#10;&lt;/html&gt;"/>
             </properties>
           </component>
           <component id="5e6ee" class="javax.swing.JLabel">
@@ -194,7 +194,7 @@
               <grid row="1" column="0" row-span="1" col-span="5" vsize-policy="3" hsize-policy="2" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
             </constraints>
             <properties>
-              <visible value="true"/>
+              <visible value="false"/>
             </properties>
             <border type="none"/>
             <children>
@@ -235,7 +235,7 @@
               </component>
               <component id="f89d7" class="javax.swing.JTextField" binding="numOutFunc">
                 <constraints>
-                  <grid row="2" column="1" row-span="1" col-span="7" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false"/>
+                  <grid row="2" column="1" row-span="1" col-span="2" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false"/>
                 </constraints>
                 <properties>
                   <text value="4"/>
@@ -279,7 +279,7 @@
               </component>
               <component id="d9c10" class="javax.swing.JTextField" binding="batchSizeValue">
                 <constraints>
-                  <grid row="3" column="3" row-span="1" col-span="2" vsize-policy="0" hsize-policy="2" anchor="8" fill="1" indent="0" use-parent-layout="false"/>
+                  <grid row="3" column="3" row-span="1" col-span="2" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false"/>
                 </constraints>
                 <properties>
                   <text value="100"/>
@@ -312,7 +312,7 @@
               </component>
               <component id="b906" class="javax.swing.JComboBox" binding="optimisationAlgo" custom-create="true">
                 <constraints>
-                  <grid row="4" column="1" row-span="1" col-span="3" vsize-policy="0" hsize-policy="0" anchor="8" fill="1" indent="0" use-parent-layout="false"/>
+                  <grid row="4" column="1" row-span="1" col-span="7" vsize-policy="0" hsize-policy="0" anchor="8" fill="1" indent="0" use-parent-layout="false"/>
                 </constraints>
                 <properties>
                   <toolTipText value="Optimization algorithm to use"/>
@@ -363,17 +363,19 @@
               </component>
               <component id="59d59" class="javax.swing.JLabel">
                 <constraints>
-                  <grid row="4" column="4" row-span="1" col-span="2" vsize-policy="0" hsize-policy="0" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+                  <grid row="2" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
                 </constraints>
                 <properties>
                   <text value="Weight init"/>
                 </properties>
               </component>
-              <component id="89706" class="javax.swing.JComboBox" binding="weightInit">
+              <component id="89706" class="javax.swing.JComboBox" binding="weightInit" custom-create="true">
                 <constraints>
-                  <grid row="4" column="6" row-span="1" col-span="2" vsize-policy="0" hsize-policy="2" anchor="8" fill="1" indent="0" use-parent-layout="false"/>
+                  <grid row="2" column="4" row-span="1" col-span="4" vsize-policy="0" hsize-policy="2" anchor="8" fill="1" indent="0" use-parent-layout="false"/>
                 </constraints>
-                <properties/>
+                <properties>
+                  <toolTipText value="&lt;html&gt;&#10;&lt;b&gt;Weight initialization scheme&lt;/b&gt;&lt;br&gt;&#10;&lt;b&gt;DISTRIBUTION&lt;/b&gt;: Sample weights from a provided distribution&lt;br&gt;&#10;&lt;b&gt;ZERO&lt;/b&gt;: Generate weights as zeros&lt;br&gt;&#10;&lt;b&gt;SIGMOID_UNIFORM&lt;/b&gt;: A version of XAVIER_UNIFORM for sigmoid activation functions. U(-r,r) with r=4*sqrt(6/(fanIn + fanOut))&lt;br&gt;&#10;&lt;b&gt;UNIFORM&lt;/b&gt;: Uniform U[-a,a] with a=1/sqrt(fanIn). &quot;Commonly used heuristic&quot; as per Glorot and Bengio 2010&lt;br&gt;&#10;&lt;b&gt;XAVIER&lt;/b&gt;: As per Glorot and Bengio 2010: Gaussian distribution with mean 0, variance 2.0/(fanIn + fanOut)&lt;br&gt;&#10;&lt;b&gt;XAVIER_UNIFORM&lt;/b&gt;: As per Glorot and Bengio 2010: Uniform distribution U(-s,s) with s = sqrt(6/(fanIn + fanOut))&lt;br&gt;&#10;&lt;b&gt;XAVIER_FAN_IN&lt;/b&gt;: Similar to Xavier, but 1/fanIn -&gt; Caffe originally used this.&lt;br&gt;&#10;&lt;b&gt;XAVIER_LEGACY&lt;/b&gt;: Xavier weight init in DL4J up to 0.6.0. XAVIER should be preferred.&lt;br&gt;&#10;&lt;b&gt;RELU&lt;/b&gt;: He et al. (2015), &quot;Delving Deep into Rectifiers&quot;. Normal distribution with variance 2.0/nIn&lt;br&gt;&#10;&lt;b&gt;RELU_UNIFORM&lt;/b&gt;: He et al. (2015), &quot;Delving Deep into Rectifiers&quot;. Uniform distribution U(-s,s) with s = sqrt(6/fanIn)&#10;&lt;/html&gt;"/>
+                </properties>
               </component>
             </children>
           </grid>

@@ -401,6 +401,7 @@ public class GUIRmt extends JFrame {
         chartPanel.setFillZoomRectangle(false);
         chartJPanel = new JPanel(new BorderLayout());
         chartJPanel.add(chartPanel);
+        weightInit = new JComboBox(WeightInit.values());
         optimisationAlgo = new JComboBox(OptimizationAlgorithm.values());
         lossFunc = new JComboBox(LossFunctions.LossFunction.values());
     }
@@ -473,7 +474,7 @@ public class GUIRmt extends JFrame {
         panel3.add(buttonStop, new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         funcT = new JTextField();
         funcT.setText("");
-        funcT.setToolTipText("<html>\n<b>Predefined available functions:</b>\n<br>abs: absolute value\n<br>acos: arc cosine\n<br>asin: arc sine\n<br>atan: arc tangent\n<br>cbrt: cubic root\n<br>ceil: nearest upper integer\n<br>cos: cosine\n<br>cosh: hyperbolic cosine\n<br>exp: euler's number raised to the power (e^x)\n<br>floor: nearest lower integer\n<br>log: logarithmus naturalis (base e)\n<br>log10: logarithm (base 10)\n<br>log2: logarithm (base 2)\n<br>sin: sine\n<br>sinh: hyperbolic sine\n<br>sqrt: square root\n<br>tan: tangent\n<br>tanh: hyperbolic tangent\n<br>signum: signum function\n</html>");
+        funcT.setToolTipText("<html>\n<b>Predefined available functions:</b><br>\n<b>abs</b>: absolute value<br>\n<b>acos</b>: arc cosine<br>\n<b>asin</b>: arc sine<br>\n<b>atan</b>: arc tangent<br>\n<b>cbrt</b>: cubic root<br>\n<b>ceil</b>: nearest upper integer<br>\n<b>cos</b>: cosine<br>\n<b>cosh</b>: hyperbolic cosine<br>\n<b>exp</b>: euler's number raised to the power (e^x)<br>\n<b>floor</b>: nearest lower integer<br>\n<b>log</b>: logarithmus naturalis (base e)<br>\n<b>log10</b>: logarithm (base 10)<br>\n<b>log2</b>: logarithm (base 2)<br>\n<b>sin</b>: sine<br>\n<b>sinh</b>: hyperbolic sine<br>\n<b>sqrt</b>: square root<br>\n<b>tan</b>: tangent<br>\n<b>tanh</b>: hyperbolic tangent<br>\n<b>signum</b>: signum function\n</html>");
         panel2.add(funcT, new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(150, -1), null, 0, false));
         final JLabel label4 = new JLabel();
         label4.setText("f(x) =");
@@ -485,7 +486,7 @@ public class GUIRmt extends JFrame {
         contentPane.add(panel4, new GridConstraints(3, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
         optionsMore = new JPanel();
         optionsMore.setLayout(new GridLayoutManager(6, 8, new Insets(0, 0, 0, 0), -1, -1));
-        optionsMore.setVisible(true);
+        optionsMore.setVisible(false);
         panel4.add(optionsMore, new GridConstraints(1, 0, 1, 5, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
         layersCfg = new JTextField();
         layersCfg.setText("50, 50, 50, 50, 50, 50, 50, 50");
@@ -505,7 +506,7 @@ public class GUIRmt extends JFrame {
         numOutFunc = new JTextField();
         numOutFunc.setText("4");
         numOutFunc.setToolTipText("Number of output approximating functions");
-        optionsMore.add(numOutFunc, new GridConstraints(2, 1, 1, 7, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        optionsMore.add(numOutFunc, new GridConstraints(2, 1, 1, 2, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         final JLabel label7 = new JLabel();
         label7.setText("Number of output functions");
         label7.setVisible(true);
@@ -524,7 +525,7 @@ public class GUIRmt extends JFrame {
         batchSizeValue = new JTextField();
         batchSizeValue.setText("100");
         batchSizeValue.setToolTipText("Batch size: i.e., each epoch has nDataPoints/batchSize parameter updates");
-        optionsMore.add(batchSizeValue, new GridConstraints(3, 3, 1, 2, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        optionsMore.add(batchSizeValue, new GridConstraints(3, 3, 1, 2, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         final JLabel label10 = new JLabel();
         label10.setText("Iterations");
         optionsMore.add(label10, new GridConstraints(3, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
@@ -535,7 +536,7 @@ public class GUIRmt extends JFrame {
         label11.setText("Optimisation algorithm");
         optionsMore.add(label11, new GridConstraints(4, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         optimisationAlgo.setToolTipText("Optimization algorithm to use");
-        optionsMore.add(optimisationAlgo, new GridConstraints(4, 1, 1, 3, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        optionsMore.add(optimisationAlgo, new GridConstraints(4, 1, 1, 7, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         final JLabel label12 = new JLabel();
         label12.setText("Loss function");
         optionsMore.add(label12, new GridConstraints(5, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
@@ -555,9 +556,9 @@ public class GUIRmt extends JFrame {
         optionsMore.add(label13, new GridConstraints(1, 5, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         final JLabel label14 = new JLabel();
         label14.setText("Weight init");
-        optionsMore.add(label14, new GridConstraints(4, 4, 1, 2, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
-        weightInit = new JComboBox();
-        optionsMore.add(weightInit, new GridConstraints(4, 6, 1, 2, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        optionsMore.add(label14, new GridConstraints(2, 3, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        weightInit.setToolTipText("<html>\n<b>Weight initialization scheme</b><br>\n<b>DISTRIBUTION</b>: Sample weights from a provided distribution<br>\n<b>ZERO</b>: Generate weights as zeros<br>\n<b>SIGMOID_UNIFORM</b>: A version of XAVIER_UNIFORM for sigmoid activation functions. U(-r,r) with r=4*sqrt(6/(fanIn + fanOut))<br>\n<b>UNIFORM</b>: Uniform U[-a,a] with a=1/sqrt(fanIn). \"Commonly used heuristic\" as per Glorot and Bengio 2010<br>\n<b>XAVIER</b>: As per Glorot and Bengio 2010: Gaussian distribution with mean 0, variance 2.0/(fanIn + fanOut)<br>\n<b>XAVIER_UNIFORM</b>: As per Glorot and Bengio 2010: Uniform distribution U(-s,s) with s = sqrt(6/(fanIn + fanOut))<br>\n<b>XAVIER_FAN_IN</b>: Similar to Xavier, but 1/fanIn -> Caffe originally used this.<br>\n<b>XAVIER_LEGACY</b>: Xavier weight init in DL4J up to 0.6.0. XAVIER should be preferred.<br>\n<b>RELU</b>: He et al. (2015), \"Delving Deep into Rectifiers\". Normal distribution with variance 2.0/nIn<br>\n<b>RELU_UNIFORM</b>: He et al. (2015), \"Delving Deep into Rectifiers\". Uniform distribution U(-s,s) with s = sqrt(6/fanIn)\n</html>");
+        optionsMore.add(weightInit, new GridConstraints(2, 4, 1, 4, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         final Spacer spacer1 = new Spacer();
         panel4.add(spacer1, new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, 1, null, null, null, 0, false));
         buttonMoreLess = new JButton();
@@ -578,13 +579,13 @@ public class GUIRmt extends JFrame {
         loadButton = new JButton();
         loadButton.setIcon(new ImageIcon(getClass().getResource("/open.png")));
         loadButton.setInheritsPopupMenu(true);
-        loadButton.setMargin(new Insets(2, 4, 2, 4));
+        loadButton.setMargin(new Insets(2, 4, 2, 0));
         loadButton.setText("Load");
         loadButton.setToolTipText("Load the configuration of the neural network from file");
         panel5.add(loadButton, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         saveButton = new JButton();
         saveButton.setIcon(new ImageIcon(getClass().getResource("/save.png")));
-        saveButton.setMargin(new Insets(2, 4, 2, 4));
+        saveButton.setMargin(new Insets(2, 0, 2, 4));
         saveButton.setText("Save");
         saveButton.setToolTipText("Save training graphs and approximation and the parameters of the neural network");
         panel5.add(saveButton, new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
