@@ -409,7 +409,7 @@
               <toolTipText value="Shows a graph of the learning process"/>
             </properties>
           </component>
-          <grid id="6b682" layout-manager="GridLayoutManager" row-count="1" column-count="2" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+          <grid id="6b682" layout-manager="GridLayoutManager" row-count="1" column-count="3" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
             <margin top="0" left="0" bottom="0" right="0"/>
             <constraints>
               <grid row="0" column="2" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
@@ -422,7 +422,7 @@
             <children>
               <component id="e45bb" class="javax.swing.JButton" binding="loadButton" default-binding="true">
                 <constraints>
-                  <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                  <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
                 </constraints>
                 <properties>
                   <icon value="open.png"/>
@@ -434,13 +434,23 @@
               </component>
               <component id="435d" class="javax.swing.JButton" binding="saveButton" default-binding="true">
                 <constraints>
-                  <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="2" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                  <grid row="0" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="2" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
                 </constraints>
                 <properties>
                   <icon value="save.png"/>
                   <margin top="2" left="4" bottom="2" right="4"/>
                   <text value="Save"/>
                   <toolTipText value="Save training graphs and approximation and the parameters of the neural network"/>
+                </properties>
+              </component>
+              <component id="5f293" class="javax.swing.JButton" binding="buttonEval">
+                <constraints>
+                  <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                </constraints>
+                <properties>
+                  <icon value="eval.png"/>
+                  <margin top="2" left="4" bottom="2" right="4"/>
+                  <text value="Eval"/>
                 </properties>
               </component>
             </children>

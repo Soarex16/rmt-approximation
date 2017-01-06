@@ -19,6 +19,8 @@ import org.jfree.chart.ChartPanel;
 import org.jfree.chart.ChartUtilities;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.plot.PlotOrientation;
+import org.jfree.chart.renderer.xy.XYLineAndShapeRenderer;
+import org.jfree.data.xy.XYSeries;
 import org.jfree.data.xy.XYSeriesCollection;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -38,6 +40,10 @@ import java.util.Random;
 import static com.soarex.neural.RegressionMathFuncApproximation.*;
 
 public class GUIRmt extends JFrame {
+    private static MultiLayerNetwork net;
+    private static ChartPanel chartPanel;
+    private static XYSeriesCollection dataSet = new XYSeriesCollection();
+    private static XYSeries evalSeries = new XYSeries("c0");
     private JPanel contentPane;
     private JButton buttonStart;
     private JTextField funcT;
@@ -66,16 +72,14 @@ public class GUIRmt extends JFrame {
     private JButton loadButton;
     private JButton buttonStop;
     private JComboBox weightInit;
-
+    private JButton buttonEval;
     private WeightInit wInit = WeightInit.XAVIER;
     private OptimizationAlgorithm optAlg = OptimizationAlgorithm.STOCHASTIC_GRADIENT_DESCENT;
     private LossFunctions.LossFunction lossFn = LossFunctions.LossFunction.MSE;
     private int[] networkCfg;
-
-    private ChartPanel chartPanel;
-
     private GUILearningProcess learn = new GUILearningProcess();
     private GUIAbout about = new GUIAbout();
+    private GUIEval eval = new GUIEval();
 
     private int totalEpochs = 0;
     private int saveWidth = 1920;
@@ -108,6 +112,7 @@ public class GUIRmt extends JFrame {
         randomSeedCheckBox.addActionListener(e -> rngOff());
         buttonStart.addActionListener(e -> onStart());
         buttonStop.addActionListener(e -> onStop());
+        buttonEval.addActionListener(e -> onEval());
         buttonMoreLess.addActionListener(e -> moreLess());
         buttonAbout.addActionListener(e -> credits());
         buttonLearningGraph.addActionListener(e -> learningGraph());
@@ -120,6 +125,26 @@ public class GUIRmt extends JFrame {
         form.setTitle("Math function approximation demo");
         form.pack();
         form.setVisible(true);
+    }
+
+    public static void evaluate(INDArray x, String dataSetName, boolean toExist) {
+        if (net != null) {
+            INDArray y = net.output(x, false);
+            if (toExist) {
+                if (!dataSet.getSeries().contains(evalSeries)) {
+                    dataSet.addSeries(evalSeries);
+                    ((XYLineAndShapeRenderer) chartPanel.getChart().getXYPlot().getRenderer())
+                            .setSeriesShapesVisible(dataSet.getSeries().indexOf(evalSeries), true);
+                }
+                final double[] xd = x.data().asDouble();
+                final double[] yd = y.data().asDouble();
+                for (int i = 0; i < xd.length; ++i) evalSeries.add(xd[i], yd[i]);
+            } else {
+                addSeries(dataSet, x, y, dataSetName);
+                ((XYLineAndShapeRenderer) chartPanel.getChart().getXYPlot().getRenderer())
+                        .setSeriesShapesVisible(dataSet.getSeriesCount() - 1, true);
+            }
+        }
     }
 
     private void onStop() {
@@ -230,7 +255,7 @@ public class GUIRmt extends JFrame {
         Number spinnerObj = (Number) iterationsValue.getValue();
         iterations = spinnerObj.intValue();
         learningRate = Double.parseDouble(learningRateValue.getText());
-        plotFrequency = nEpochs / Integer.parseInt(numOutFunc.getText());
+        plotFrequency = (int) Math.ceil(nEpochs / Integer.parseInt(numOutFunc.getText()));
 
         int batches = (int) Math.ceil(((double) nDataPoints) / batchSize);
         if (batches < 1) batches = 1;
@@ -244,10 +269,20 @@ public class GUIRmt extends JFrame {
     }
 
     private void credits() {
+        about.setLocationRelativeTo(this);
         if (about.isVisible()) {
             about.setVisible(false);
         } else {
             about.setVisible(true);
+        }
+    }
+
+    private void onEval() {
+        eval.setLocationRelativeTo(this);
+        if (eval.isVisible()) {
+            eval.setVisible(false);
+        } else {
+            eval.setVisible(true);
         }
     }
 
@@ -307,7 +342,7 @@ public class GUIRmt extends JFrame {
             progressBar.setValue(0);
 
             MultiLayerConfiguration config = getParametrisedDeepNetworkConfiguration();
-            final MultiLayerNetwork net = new MultiLayerNetwork(config);
+            net = new MultiLayerNetwork(config);
             net.init();
             net.setListeners(new CustomIterationListener(1, totalEpochs, iterCL, progressBar, learn));
 
@@ -357,7 +392,8 @@ public class GUIRmt extends JFrame {
     }
 
     private void plotFunc(final INDArray x, final INDArray y, final INDArray... predicted) {
-        XYSeriesCollection dataSet = new XYSeriesCollection();
+        dataSet.removeAllSeries();
+        evalSeries.clear();
         addSeries(dataSet, x, y, func);
 
         for (int i = 0; i < predicted.length; ++i) {
@@ -484,7 +520,7 @@ public class GUIRmt extends JFrame {
         contentPane.add(panel4, new GridConstraints(3, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
         optionsMore = new JPanel();
         optionsMore.setLayout(new GridLayoutManager(6, 8, new Insets(0, 0, 0, 0), -1, -1));
-        optionsMore.setVisible(true);
+        optionsMore.setVisible(false);
         panel4.add(optionsMore, new GridConstraints(1, 0, 1, 5, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
         layersCfg = new JTextField();
         layersCfg.setText("50, 50, 50, 50, 50, 50, 50, 50");
@@ -570,7 +606,7 @@ public class GUIRmt extends JFrame {
         buttonLearningGraph.setToolTipText("Shows a graph of the learning process");
         panel4.add(buttonLearningGraph, new GridConstraints(0, 3, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         final JPanel panel5 = new JPanel();
-        panel5.setLayout(new GridLayoutManager(1, 2, new Insets(0, 0, 0, 0), -1, -1));
+        panel5.setLayout(new GridLayoutManager(1, 3, new Insets(0, 0, 0, 0), -1, -1));
         panel5.setInheritsPopupMenu(true);
         panel5.setOpaque(true);
         panel4.add(panel5, new GridConstraints(0, 2, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
@@ -580,13 +616,18 @@ public class GUIRmt extends JFrame {
         loadButton.setMargin(new Insets(2, 4, 2, 4));
         loadButton.setText("Load");
         loadButton.setToolTipText("Load the configuration of the neural network from file");
-        panel5.add(loadButton, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        panel5.add(loadButton, new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         saveButton = new JButton();
         saveButton.setIcon(new ImageIcon(getClass().getResource("/save.png")));
         saveButton.setMargin(new Insets(2, 4, 2, 4));
         saveButton.setText("Save");
         saveButton.setToolTipText("Save training graphs and approximation and the parameters of the neural network");
-        panel5.add(saveButton, new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        panel5.add(saveButton, new GridConstraints(0, 2, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        buttonEval = new JButton();
+        buttonEval.setIcon(new ImageIcon(getClass().getResource("/eval.png")));
+        buttonEval.setMargin(new Insets(2, 4, 2, 4));
+        buttonEval.setText("Eval");
+        panel5.add(buttonEval, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         final Spacer spacer2 = new Spacer();
         contentPane.add(spacer2, new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_VERTICAL, 1, GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
     }

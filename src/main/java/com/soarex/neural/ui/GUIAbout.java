@@ -42,7 +42,7 @@ public class GUIAbout extends JDialog {
                     if (Desktop.isDesktopSupported()) {
                         Desktop desktop = Desktop.getDesktop();
                         try {
-                            URI uri = new URI("https://github.com/Soarex16");
+                            URI uri = new URI("https://github.com/Soarex16/rmt-approximation");
                             desktop.browse(uri);
                         } catch (IOException ex) {
                             ex.printStackTrace();
@@ -60,7 +60,6 @@ public class GUIAbout extends JDialog {
     }
 
     private void onOK() {
-        // add your code here
         dispose();
     }
 
@@ -94,20 +93,20 @@ public class GUIAbout extends JDialog {
         final JLabel label1 = new JLabel();
         label1.setHorizontalAlignment(0);
         label1.setHorizontalTextPosition(2);
-        label1.setText("<html>\n<b>Math function approximation demo.</b><br>\nThis program is part of the scientific work <br>\n\"The decision problem of regression analysis <br>\nusing deep neural networks on the example of the <br> approximation of mathematical functions\".<br><br>\n<b>Author:</b> Lovpache Shumaf aka Soarex16<br><br>\n</html>");
+        label1.setText("<html>\n<b>Math function approximation demo.</b><br>\nThis program is part of the scientific work <br>\n\"The decision problem of regression analysis <br> \nusing deep neural networks on the example of the <br> approximation of mathematical functions\".<br><br>\n<b>Author:</b> Lovpache Shumaf aka Soarex16<br><br>\n</html>");
         panel3.add(label1, new GridConstraints(0, 1, 1, 2, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         final JLabel label2 = new JLabel();
         label2.setIcon(new ImageIcon(getClass().getResource("/128.png")));
         label2.setIconTextGap(4);
         label2.setInheritsPopupMenu(true);
         label2.setText("");
-        panel3.add(label2, new GridConstraints(0, 0, 2, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        panel3.add(label2, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         final JLabel label3 = new JLabel();
         label3.setText("This project on github:");
-        panel3.add(label3, new GridConstraints(1, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        panel3.add(label3, new GridConstraints(1, 0, 1, 2, GridConstraints.ANCHOR_EAST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         link = new JLabel();
         link.setHorizontalAlignment(2);
-        link.setText("<html><a href=\"https://github.com/Soarex16\">https://github.com/Soarex16</a></html>");
+        link.setText("<html><a href=\"https://github.com/Soarex16/rmt-approximation\">https://github.com/Soarex16/rmt-approximation</a></html>");
         panel3.add(link, new GridConstraints(1, 2, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
     }
 

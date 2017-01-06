@@ -60,12 +60,12 @@
             <properties>
               <horizontalAlignment value="0"/>
               <horizontalTextPosition value="2"/>
-              <text value="&lt;html&gt;&#10;&lt;b&gt;Math function approximation demo.&lt;/b&gt;&lt;br&gt;&#10;This program is part of the scientific work &lt;br&gt;&#10;&quot;The decision problem of regression analysis &lt;br&gt;&#10;using deep neural networks on the example of the &lt;br&gt; approximation of mathematical functions&quot;.&lt;br&gt;&lt;br&gt;&#10;&lt;b&gt;Author:&lt;/b&gt; Lovpache Shumaf aka Soarex16&lt;br&gt;&lt;br&gt;&#10;&lt;/html&gt;"/>
+              <text value="&lt;html&gt;&#10;&lt;b&gt;Math function approximation demo.&lt;/b&gt;&lt;br&gt;&#10;This program is part of the scientific work &lt;br&gt;&#10;&quot;The decision problem of regression analysis &lt;br&gt; &#10;using deep neural networks on the example of the &lt;br&gt; approximation of mathematical functions&quot;.&lt;br&gt;&lt;br&gt;&#10;&lt;b&gt;Author:&lt;/b&gt; Lovpache Shumaf aka Soarex16&lt;br&gt;&lt;br&gt;&#10;&lt;/html&gt;"/>
             </properties>
           </component>
           <component id="d62d6" class="javax.swing.JLabel">
             <constraints>
-              <grid row="0" column="0" row-span="2" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+              <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
             </constraints>
             <properties>
               <icon value="128.png"/>
@@ -76,7 +76,7 @@
           </component>
           <component id="6c702" class="javax.swing.JLabel">
             <constraints>
-              <grid row="1" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+              <grid row="1" column="0" row-span="1" col-span="2" vsize-policy="0" hsize-policy="0" anchor="4" fill="0" indent="0" use-parent-layout="false"/>
             </constraints>
             <properties>
               <text value="This project on github:"/>
@@ -88,7 +88,7 @@
             </constraints>
             <properties>
               <horizontalAlignment value="2"/>
-              <text value="&lt;html&gt;&lt;a href=&quot;https://github.com/Soarex16&quot;&gt;https://github.com/Soarex16&lt;/a&gt;&lt;/html&gt;"/>
+              <text value="&lt;html&gt;&lt;a href=&quot;https://github.com/Soarex16/rmt-approximation&quot;&gt;https://github.com/Soarex16/rmt-approximation&lt;/a&gt;&lt;/html&gt;"/>
             </properties>
           </component>
         </children>
