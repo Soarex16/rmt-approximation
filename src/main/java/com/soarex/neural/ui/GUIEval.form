@@ -32,13 +32,13 @@
               <text value="OK"/>
             </properties>
           </component>
-          <component id="73a76" class="javax.swing.JCheckBox" binding="existCB">
+          <component id="73a76" class="javax.swing.JCheckBox" binding="separateDataSet">
             <constraints>
               <grid row="1" column="0" row-span="1" col-span="4" vsize-policy="0" hsize-policy="3" anchor="4" fill="0" indent="0" use-parent-layout="false"/>
             </constraints>
             <properties>
-              <selected value="true"/>
-              <text value="Add to existing"/>
+              <selected value="false"/>
+              <text value="Add to a separate data set"/>
             </properties>
           </component>
           <component id="a063d" class="javax.swing.JLabel">
